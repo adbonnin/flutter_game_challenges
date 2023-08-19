@@ -35,7 +35,7 @@ function doGet(request) {
   }
 
   if (action == 'getChallenge') {
-    return doGetChallenge();
+    return doGetChallenge(request.parameter.title);
   }
 
   if (action == 'getAchievementsByChallenge') {
@@ -54,12 +54,12 @@ function doGetChallenges() {
 }
 
 /**
- * @param {string} game
+ * @param {string} title
  */
 function doGetChallenge(title) {
   const ss = SpreadsheetApp.getActive();
   const repo = new ChallengeRepository(ss);
-  const voBuilder = new ChallengeVoBuilder(ss, true);
+  const voBuilder = new ChallengeVoBuilder(ss);
 
   const challenge = repo.findByTitle(title || _DEBUG_CHALLENGE);
   const vo = voBuilder.buildVo(challenge);

@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        generate_for:
+          - lib/**/domain/*.dart
+        options:
+          explicit_to_json: true
+      riverpod_generator:
+        generate_for:
+          - lib/**/application/*.dart

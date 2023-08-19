@@ -62,16 +62,13 @@ class ChallengeRepository {
 class ChallengeVoBuilder {
   /**
    * @param {SpreadsheetApp.Spreadsheet} ss
-   * @param {bool} details
    */
-  constructor(ss, details) {
+  constructor(ss) {
     this.ss = ss;
-    this.details = details;
   }  
   
   /**
-   * @param {Challenge} value
-   * @param {bool} details
+   * @param {Challenge} challenge
    * @returns {Object}
    */
   buildVo(challenge) {
@@ -80,36 +77,19 @@ class ChallengeVoBuilder {
 
   /**
    * @param {Challenge[]} challenges
-   * @param {bool} details
    * @returns {Object[]}
    */
   buildVos(challenges) {
-    const details = this.details;
     const gamesRepo = new GameRepository(this.ss);
-    const achievementRepo = new AchievementRepository(this.ss);
 
     const gameTitles = _uniqueValues(challenges, 'game');
     const gamesByTitle = _keyBy(gamesRepo.findByTitles(gameTitles), 'title');
 
-    function fixAchievement(achievement) {
-      delete achievement.challenge;
-      return achievement;
-    }
-
     function toVo(challenge) {
-      var vo = {
+      return {
         ...challenge,
         game: gamesByTitle.get(challenge.game),
-      }
-
-      if (details) {
-        vo = {
-          ...vo,
-          achievements: achievementRepo.findByChallenge(challenge.title).map(fixAchievement),
-        }
-      }
-
-      return vo;
+      };
     }
 
     return challenges.map(toVo);
