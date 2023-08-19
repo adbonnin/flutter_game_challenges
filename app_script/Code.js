@@ -47,15 +47,17 @@ function doGet(request) {
 
 function doGetChallenges() {
   const ss = SpreadsheetApp.getActive();
+  const repo = new ChallengeRepository(ss);
 
-  const challenges = getChallenges(ss);
+  const challenges = repo.getChallenges();
   return _createJsonOutput(challenges);
 }
 
 function doGetGames() {
   const ss = SpreadsheetApp.getActive();
+  const repo = new GameRepository(ss);
 
-  const games = getGames(ss);
+  const games = repo.getGames();
   return _createJsonOutput(games);
 }
 
@@ -64,9 +66,10 @@ function doGetGames() {
  */
 function doGetGameDetails(title) {
   const ss = SpreadsheetApp.getActive();
+  const repo = new GameRepository(ss);
 
-  const game = findGameByTitle(ss, title);
-  const gameDetails = game && _first(toGamesDetails(ss, [game]));
+  const game = repo.findGameByTitle(title);
+  const gameDetails = game && _first(repo.toDetails([game]));
   return _createJsonOutput(gameDetails);
 }
 
@@ -75,13 +78,14 @@ function doGetGameDetails(title) {
  */
 function doGetAchievementsByChallenge(challenge) {
   const ss = SpreadsheetApp.getActive();
+  const repo = new AchievementRepository(ss);
 
   function fixAchivement(achivement) {
     delete achivement.challenge;
     return achivement;
   }
 
-  const achievements = findAchievementsByChallenge(ss, challenge);
+  const achievements = repo.findAchievementsByChallenge(challenge);
   return _createJsonOutput(achievements.map(fixAchivement));
 }
 
