@@ -17,7 +17,7 @@ const SHEETS = {
   games: {
     _name: 'Jeux vidéo',
     title: 0,
-    theGamesDBId: 1,
+    igdbId: 1,
   },
   participants: {
     _name: 'Participants',
@@ -40,6 +40,10 @@ function doGet(request) {
 
   if (action == 'getAchievementsByChallenge') {
     return doGetAchievementsByChallenge(request.parameter.challenge);
+  }
+
+  if (action == 'authenticateToTwitch') {
+    return doAuthenticateToTwitch();
   }
 }
 
@@ -81,6 +85,20 @@ function doGetAchievementsByChallenge(challenge) {
   const achievements = repo.findByChallenge(challenge || _DEBUG_CHALLENGE);
   const vo = achievements.map(fixAchievement);
   return _createJsonOutput(vo);
+}
+
+function doAuthenticateToTwitch() {
+  const scriptProperties = PropertiesService.getScriptProperties();
+  const properties = scriptProperties.getProperties();
+
+  const clientId = properties['IGDB_CLIENT_ID'];
+  const clientSecret = properties['IGDB_CLIENT_SECRET'];
+  const auth = authenticateToTwitch(clientId, clientSecret);
+
+  return {
+    ...auth,
+    'clientId': clientId,
+  }
 }
 
 /**

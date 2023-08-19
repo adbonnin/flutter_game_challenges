@@ -25,3 +25,9 @@ Clone App Script project
 ```shell script
 $ clasp clone <projectID>
 ```
+
+Pull App Script project
+
+```shell script
+$ clasp pull
+```

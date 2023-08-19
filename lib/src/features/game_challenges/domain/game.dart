@@ -7,11 +7,11 @@ part 'game.g.dart';
 class Game {
   const Game({
     required this.title,
-    this.theGamesDBId,
+    this.igdbId,
   });
 
   final String title;
-  final int? theGamesDBId;
+  final String? igdbId;
 
   factory Game.fromJson(Map<String, dynamic> json) => //
       _$GameFromJson(json);

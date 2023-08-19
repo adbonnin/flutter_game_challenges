@@ -35,10 +35,8 @@ class Config {
   const Config({
     required this.name,
     required this.appDeploymentId,
-    required this.theGamesDbApiKey,
   });
 
   final String name;
   final String appDeploymentId;
-  final String theGamesDbApiKey;
 }

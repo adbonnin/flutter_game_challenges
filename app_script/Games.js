@@ -1,7 +1,7 @@
 class Game {
-  constructor(title, theGamesDBId) {
-    this.title = title,
-      this.theGamesDBId = theGamesDBId;
+  constructor(title, igdbId) {
+    this.title = title;
+    this.igdbId = igdbId;
   }
 }
 
@@ -37,7 +37,7 @@ class GameRepository {
   _toGame(value) {
     return new Game(
       value[SHEETS.games.title],
-      value[SHEETS.games.theGamesDBId] || null,
+      value[SHEETS.games.igdbId] || null,
     );
   }
 }
