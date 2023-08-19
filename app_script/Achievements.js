@@ -1,3 +1,11 @@
+class Achievement {
+  constructor(challenge, participant, date) {
+    this.challenge = challenge;
+    this.participant = participant;
+    this.date = date;
+  }
+}
+
 class AchievementRepository {
   constructor(ss) {
     this.ss = ss;
@@ -7,7 +15,7 @@ class AchievementRepository {
    * @param {string} challenge
    * @returns {Achievement[]}
    */
-  findAchievementsByChallenge(challenge) {
+  findByChallenge(challenge) {
     const sheet = this.ss.getSheetByName(SHEETS.achievements._name);
     const predicate = (value) => challenge == value[SHEETS.achievements.challenge];
 
@@ -20,23 +28,18 @@ class AchievementRepository {
    * @returns {Achievement[]}
    */
   _toAchievements(values) {
-
-    function toAchievement(value) {
-      return new Achievement(
-        value[SHEETS.achievements.challenge],
-        value[SHEETS.achievements.participant],
-        value[SHEETS.achievements.date],
-      );
-    }
-
-    return values.map(toAchievement);
+    return values.map(this._toAchievement);
   }
-}
 
-class Achievement {
-  constructor(challenge, participant, date) {
-    this.challenge = challenge;
-    this.participant = participant;
-    this.date = date;
+  /**
+   * @param {Object[]} value
+   * @returns {Achievement}
+   */
+  _toAchievement(value) {
+    return new Achievement(
+      value[SHEETS.achievements.challenge],
+      value[SHEETS.achievements.participant],
+      value[SHEETS.achievements.date],
+    );
   }
 }

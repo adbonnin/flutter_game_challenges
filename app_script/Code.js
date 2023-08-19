@@ -25,6 +25,8 @@ const SHEETS = {
   },
 }
 
+const _DEBUG_CHALLENGE = null; // 'Manège arc en ciel';
+
 function doGet(request) {
   const action = request.parameter.action;
 
@@ -32,12 +34,8 @@ function doGet(request) {
     return doGetChallenges();
   }
 
-  if (action == 'getGames') {
-    return doGetGames();
-  }
-
-  if (action == 'getGameDetails') {
-    return doGetGameDetails(request.parameter.game);
+  if (action == 'getChallenge') {
+    return doGetChallenge();
   }
 
   if (action == 'getAchievementsByChallenge') {
@@ -48,29 +46,24 @@ function doGet(request) {
 function doGetChallenges() {
   const ss = SpreadsheetApp.getActive();
   const repo = new ChallengeRepository(ss);
+  const voBuilder = new ChallengeVoBuilder(ss);
 
-  const challenges = repo.getChallenges();
-  return _createJsonOutput(challenges);
-}
-
-function doGetGames() {
-  const ss = SpreadsheetApp.getActive();
-  const repo = new GameRepository(ss);
-
-  const games = repo.getGames();
-  return _createJsonOutput(games);
+  const challenges = repo.getAll();
+  const vos = voBuilder.buildVos(challenges);
+  return _createJsonOutput(vos);
 }
 
 /**
  * @param {string} game
  */
-function doGetGameDetails(title) {
+function doGetChallenge(title) {
   const ss = SpreadsheetApp.getActive();
-  const repo = new GameRepository(ss);
+  const repo = new ChallengeRepository(ss);
+  const voBuilder = new ChallengeVoBuilder(ss, true);
 
-  const game = repo.findGameByTitle(title);
-  const gameDetails = game && _first(repo.toDetails([game]));
-  return _createJsonOutput(gameDetails);
+  const challenge = repo.findByTitle(title || _DEBUG_CHALLENGE);
+  const vo = voBuilder.buildVo(challenge);
+  return _createJsonOutput(vo);
 }
 
 /**
@@ -80,13 +73,14 @@ function doGetAchievementsByChallenge(challenge) {
   const ss = SpreadsheetApp.getActive();
   const repo = new AchievementRepository(ss);
 
-  function fixAchivement(achivement) {
-    delete achivement.challenge;
-    return achivement;
+  function fixAchievement(achievement) {
+    delete achievement.challenge;
+    return achievement;
   }
 
-  const achievements = repo.findAchievementsByChallenge(challenge);
-  return _createJsonOutput(achievements.map(fixAchivement));
+  const achievements = repo.findByChallenge(challenge || _DEBUG_CHALLENGE);
+  const vo = achievements.map(fixAchievement);
+  return _createJsonOutput(vo);
 }
 
 /**

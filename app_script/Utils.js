@@ -29,7 +29,7 @@ function _groupBy(array, keyField) {
 
   function reduceFct(previousValue, currentValue) {
     const key = currentValue[keyField];
-    
+
     const previousValues = previousValue.get(key) || [];
     const newValues = [...previousValues, currentValue];
 
