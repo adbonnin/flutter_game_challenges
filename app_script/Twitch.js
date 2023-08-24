@@ -1,7 +1,7 @@
 /**
  * @param {string} clientId
  * @param {string} clientSecret
- * @returns {IGDBAuth}
+ * @returns {TwitchAuth}
  */
 function authenticateToTwitch(clientId, clientSecret) {
   const formData = {
@@ -18,17 +18,9 @@ function authenticateToTwitch(clientId, clientSecret) {
   const response = UrlFetchApp.fetch('https://id.twitch.tv/oauth2/token', options);
   const json = JSON.parse(response.getContentText());
 
-  return new TwitchAuth(
-    json.access_token,
-    json.expires_in,
-    json.token_type,
-  );
-}
-
-class TwitchAuth {
-  constructor(accessToken, expiresIn, tokenType) {
-    this.accessToken = accessToken;
-    this.expiresIn = expiresIn;
-    this.tokenType = tokenType;
+  return {
+    clientId: clientId,
+    accessToken: json.access_token,
+    expiresIn: json.expires_in,
   }
 }

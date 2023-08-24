@@ -1,19 +1,14 @@
-class Achievement {
-  constructor(challenge, participant, date) {
-    this.challenge = challenge;
-    this.participant = participant;
-    this.date = date;
-  }
-}
-
 class AchievementRepository {
+  /**
+   * @param {SpreadsheetApp.Spreadsheet} ss
+   */
   constructor(ss) {
     this.ss = ss;
   }
 
   /**
    * @param {string} challenge
-   * @returns {Achievement[]}
+   * @returns {Object[]}
    */
   findByChallenge(challenge) {
     const sheet = this.ss.getSheetByName(SHEETS.achievements._name);
@@ -25,7 +20,7 @@ class AchievementRepository {
 
   /**
    * @param {Object[][]} values
-   * @returns {Achievement[]}
+   * @returns {Object[]}
    */
   _toAchievements(values) {
     return values.map(this._toAchievement);
@@ -33,13 +28,13 @@ class AchievementRepository {
 
   /**
    * @param {Object[]} value
-   * @returns {Achievement}
+   * @returns {Object}
    */
   _toAchievement(value) {
-    return new Achievement(
-      value[SHEETS.achievements.challenge],
-      value[SHEETS.achievements.participant],
-      value[SHEETS.achievements.date],
-    );
+    return {
+      challenge: value[SHEETS.achievements.challenge],
+      participant: value[SHEETS.achievements.participant],
+      date: value[SHEETS.achievements.date],
+    }
   }
 }

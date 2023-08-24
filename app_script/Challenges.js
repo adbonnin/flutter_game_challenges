@@ -1,12 +1,3 @@
-class Challenge {
-  constructor(title, game, creator, description) {
-    this.title = title;
-    this.game = game;
-    this.creator = creator;
-    this.description = description;
-  }
-}
-
 class ChallengeRepository {
   constructor(ss) {
     this.ss = ss;
@@ -24,7 +15,7 @@ class ChallengeRepository {
 
   /**
    * @param {string} title
-   * @returns {Challenge[]}
+   * @returns {Object[]}
    */
   findByTitle(title) {
     const sheet = this.ss.getSheetByName(SHEETS.challenges._name);
@@ -36,7 +27,7 @@ class ChallengeRepository {
 
   /**
    * @param {Object[][]} values
-   * @returns {Challenge[]}
+   * @returns {Object[]}
    */
   _toChallenges(values) {
     return values.map(this._toChallenge);
@@ -44,31 +35,28 @@ class ChallengeRepository {
 
   /**
    * @param {Object[][]} values
-   * @returns {Challenge[]}
+   * @returns {Object}
    */
   _toChallenge(value) {
-    return new Challenge(
-      value[SHEETS.challenges.title],
-      value[SHEETS.challenges.game],
-      value[SHEETS.challenges.creator],
-      value[SHEETS.challenges.description],
-    );
+    return {
+      title: value[SHEETS.challenges.title],
+      game: value[SHEETS.challenges.game],
+      creator: value[SHEETS.challenges.creator],
+      description: value[SHEETS.challenges.description],
+    }
   }
 }
 
-/**
- * @extends VoBuilder<Challenge>
- */
 class ChallengeVoBuilder {
   /**
    * @param {SpreadsheetApp.Spreadsheet} ss
    */
   constructor(ss) {
     this.ss = ss;
-  }  
-  
+  }
+
   /**
-   * @param {Challenge} challenge
+   * @param {Object} challenge
    * @returns {Object}
    */
   buildVo(challenge) {
@@ -76,7 +64,7 @@ class ChallengeVoBuilder {
   }
 
   /**
-   * @param {Challenge[]} challenges
+   * @param {Object[]} challenges
    * @returns {Object[]}
    */
   buildVos(challenges) {

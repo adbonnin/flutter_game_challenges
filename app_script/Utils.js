@@ -44,16 +44,25 @@ function _groupBy(array, keyField) {
  * @template T
  * @param {T[]} array
  * @param {string} key
- * @returns {Set<Object>}
+ * @returns {Object[]}
  */
 function _uniqueValues(array, key) {
 
   function reduceFct(previousValue, currentValue) {
-    previousValue.add(currentValue[key]);
+    const value = currentValue[key]
+
+    if (Array.isArray(value)) {
+      value.forEach(previousValue.add, previousValue)
+    }
+    else {
+      previousValue.add(value);
+    }
+
     return previousValue;
   }
 
-  return array.reduce(reduceFct, new Set());
+  const result = array.reduce(reduceFct, new Set());
+  return Array.from(result);
 }
 
 /**
@@ -70,4 +79,21 @@ function _filterSheetContent(sheet, predicate) {
 
   const values = sheet.getDataRange().getValues();
   return values.filter(filterFct);
+}
+
+/**
+ * @param {string} str
+ * @returns {number}
+ */
+function _toNumber(str) {
+  return +str;
+}
+
+/**
+ * @template T
+ * @param {T[]} array
+ * @returns {T[]}
+ */
+function _filterNotNil(array) {
+  return array && array.filter((v) => v != null) 
 }

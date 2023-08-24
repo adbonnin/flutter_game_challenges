@@ -1,22 +1,15 @@
-class Game {
-  constructor(title, igdbId) {
-    this.title = title;
-    this.igdbId = igdbId;
-  }
-}
-
 class GameRepository {
   constructor(ss) {
     this.ss = ss;
   }
 
   /**
-   * @param {Set<string>} titles
-   * @returns {Game[]}
-   */
+   * @param {string[]} titles
+   * @returns {Object[]}
+   */ 
   findByTitles(titles) {
     const sheet = this.ss.getSheetByName(SHEETS.games._name);
-    const predicate = (value) => titles.has(value[SHEETS.games.title]);
+    const predicate = (value) => titles.includes(value[SHEETS.games.title]);
 
     const values = _filterSheetContent(sheet, predicate);
     return this._toGames(values);
@@ -24,7 +17,7 @@ class GameRepository {
 
   /**
    * @param {Object[][]} values
-   * @returns {Game[]}
+   * @returns {Object[]}
    */
   _toGames(values) {
     return values.map(this._toGame);
@@ -32,12 +25,12 @@ class GameRepository {
 
   /**
    * @param {Object[]} value
-   * @returns {Game}
+   * @returns {Object}
    */
   _toGame(value) {
-    return new Game(
-      value[SHEETS.games.title],
-      value[SHEETS.games.igdbId] || null,
-    );
+    return {
+      title: value[SHEETS.games.title],
+      igdbId: value[SHEETS.games.igdbId] || null,
+    }
   }
 }

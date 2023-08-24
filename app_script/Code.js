@@ -1,4 +1,5 @@
 // API Documentation : https://developers.google.com/apps-script/reference/spreadsheet?hl=en
+// Create a Custom HTML Form for Google Sheets using Google Apps Script : https://www.youtube.com/watch?v=SnzFCC3tkZY
 
 const SHEETS = {
   achievements: {
@@ -26,24 +27,37 @@ const SHEETS = {
 }
 
 const _DEBUG_CHALLENGE = null; // 'Manège arc en ciel';
+const _DEBUG_SEARCH = 'Mario Galaxy';
+
+function showAddGameForm() {
+  const form = HtmlService.createHtmlOutputFromFile('AddGameForm')
+  SpreadsheetApp.getUi().showModalDialog(form, 'Ajouter un jeu')
+}
+
+function onOpen() {
+  const menu = SpreadsheetApp.getUi().createMenu('Formulaires')
+  menu.addItem('Ajouter un jeu', 'showAddGameForm')
+  menu.addToUi()
+}
 
 function doGet(request) {
-  const action = request.parameter.action;
+  const parameter = request.parameter;
+  const action = parameter.action;
 
   if (action == 'getChallenges') {
     return doGetChallenges();
   }
 
   if (action == 'getChallenge') {
-    return doGetChallenge(request.parameter.title);
+    return doGetChallenge(parameter.title);
   }
 
   if (action == 'getAchievementsByChallenge') {
-    return doGetAchievementsByChallenge(request.parameter.challenge);
+    return doGetAchievementsByChallenge(parameter.challenge);
   }
 
-  if (action == 'authenticateToTwitch') {
-    return doAuthenticateToTwitch();
+  if (action == 'searchIGDBGame') {
+    return doAuthenticateToTwitch(parameter.search, _toNumber(parameter.limit));
   }
 }
 
@@ -83,22 +97,20 @@ function doGetAchievementsByChallenge(challenge) {
   }
 
   const achievements = repo.findByChallenge(challenge || _DEBUG_CHALLENGE);
-  const vo = achievements.map(fixAchievement);
-  return _createJsonOutput(vo);
+  const vos = achievements.map(fixAchievement);
+  return _createJsonOutput(vos);
 }
 
-function doAuthenticateToTwitch() {
-  const scriptProperties = PropertiesService.getScriptProperties();
-  const properties = scriptProperties.getProperties();
+/**
+ * @param {string} search
+ */
+function doSearchIGDBGame(search, limit) {
+  const client = new IGDBClient()
+  const voBuilder = new IGDBGameVoBuilder(client)
 
-  const clientId = properties['IGDB_CLIENT_ID'];
-  const clientSecret = properties['IGDB_CLIENT_SECRET'];
-  const auth = authenticateToTwitch(clientId, clientSecret);
-
-  return {
-    ...auth,
-    'clientId': clientId,
-  }
+  const games = client.searchGames(search || _DEBUG_SEARCH, limit)
+  const vos = voBuilder.buildVos(games)
+  return _createJsonOutput(vos)
 }
 
 /**
