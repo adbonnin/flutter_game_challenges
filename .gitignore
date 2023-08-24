@@ -34,9 +34,6 @@ migrate_working_dir/
 *.g.dart
 *.env
 
-# Google Apps Script
-app_script/.clasp.json
-
 # Symbolication related
 app.*.symbols
 
