@@ -21,7 +21,18 @@ class AsyncValueWidget<T> extends StatelessWidget {
   }
 
   Widget _buildError(Object error, StackTrace stackTrace) {
-    return Text(error.toString());
+    return Container(
+      padding: const EdgeInsets.all(12),
+      color: Colors.red,
+      child: Center(
+        child: Text(
+          error.toString(),
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildLoading() {

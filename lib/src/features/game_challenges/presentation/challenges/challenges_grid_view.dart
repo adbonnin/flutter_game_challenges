@@ -14,7 +14,7 @@ class ChallengesGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 2,
         childAspectRatio: 1.4,
       ),
       itemBuilder: (_, index) => _buildItem(challenges[index]),

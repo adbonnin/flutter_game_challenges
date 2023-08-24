@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_game_challenges/src/app.dart';
 import 'package:flutter_game_challenges/src/features/game_challenges/domain/achievement.dart';
 import 'package:flutter_game_challenges/src/features/game_challenges/domain/challenge.dart';
+import 'package:flutter_game_challenges/src/features/game_challenges/domain/twitch_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'game_challenges_client.g.dart';
@@ -56,6 +57,11 @@ class GameChallengeClient {
     );
 
     return Achievement.fromJsonList(resp.data);
+  }
+
+  Future<TwitchAuh> authenticateToTwitch() async {
+    final resp = await _get('authenticateToTwitch');
+    return TwitchAuh.fromJson(resp.data);
   }
 
   Future<Response<dynamic>> _get(String action, {Map<String, dynamic>? queryParameters}) {
