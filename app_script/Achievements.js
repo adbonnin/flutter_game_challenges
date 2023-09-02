@@ -1,9 +1,9 @@
-class AchievementRepository {
+class AchievementRepository extends Repository {
   /**
    * @param {SpreadsheetApp.Spreadsheet} ss
    */
   constructor(ss) {
-    this.ss = ss;
+    super(ss, SHEETS.achievements._name);
   }
 
   /**
@@ -11,30 +11,19 @@ class AchievementRepository {
    * @returns {Object[]}
    */
   findByChallenge(challenge) {
-    const sheet = this.ss.getSheetByName(SHEETS.achievements._name);
-    const predicate = (value) => challenge == value[SHEETS.achievements.challenge];
-
-    const values = _filterSheetContent(sheet, predicate);
-    return this._toAchievements(values);
-  }
-
-  /**
-   * @param {Object[][]} values
-   * @returns {Object[]}
-   */
-  _toAchievements(values) {
-    return values.map(this._toAchievement);
+    const predicate = (value) => value[SHEETS.achievements.challenge] === challenge;
+    return this.findAll(predicate);
   }
 
   /**
    * @param {Object[]} value
    * @returns {Object}
    */
-  _toAchievement(value) {
+  _fromRow(value) {
     return {
-      challenge: value[SHEETS.achievements.challenge],
-      participant: value[SHEETS.achievements.participant],
-      date: value[SHEETS.achievements.date],
+      challenge: String(value[SHEETS.achievements.challenge]),
+      participant: String(value[SHEETS.achievements.participant]),
+      date: Date(value[SHEETS.achievements.date]) || null,
     }
   }
 }

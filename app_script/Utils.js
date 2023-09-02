@@ -1,9 +1,7 @@
-const FIRST_CONTENT_INDEX = 1;
-
 /**
  * @template T
  * @param {T[]} array
- * @returns {T?}
+ * @returns {T | null}
  */
 function _first(array) {
   return (array && array.length) ? array[0] : undefined;
@@ -12,23 +10,23 @@ function _first(array) {
 /**
  * @template T
  * @param {T[]} array
- * @param {string} key
+ * @param {string} keyProperty
  * @returns {Map<Object, T>}
  */
-function _keyBy(array, keyField) {
-  return new Map(array.map((object) => [object[keyField], object]));
+function _keyBy(array, keyProperty) {
+  return new Map(array.map((object) => [object[keyProperty], object]));
 }
 
 /**
  * @template T
  * @param {T[]} array
- * @param {string} key
+ * @param {string} keyProperty
  * @returns {Map<Object, T[]>}
  */
-function _groupBy(array, keyField) {
+function _groupBy(array, keyProperty) {
 
   function reduceFct(previousValue, currentValue) {
-    const key = currentValue[keyField];
+    const key = currentValue[keyProperty];
 
     const previousValues = previousValue.get(key) || [];
     const newValues = [...previousValues, currentValue];
@@ -43,18 +41,17 @@ function _groupBy(array, keyField) {
 /**
  * @template T
  * @param {T[]} array
- * @param {string} key
+ * @param {string} property
  * @returns {Object[]}
  */
-function _uniqueValues(array, key) {
+function _uniqueValues(array, property) {
 
   function reduceFct(previousValue, currentValue) {
-    const value = currentValue[key]
+    const value = currentValue[property]
 
     if (Array.isArray(value)) {
       value.forEach(previousValue.add, previousValue)
-    }
-    else {
+    } else {
       previousValue.add(value);
     }
 
@@ -66,34 +63,57 @@ function _uniqueValues(array, key) {
 }
 
 /**
- * @param {SpreadsheetApp.Sheet} sheet
- * @param {(value: Object[], index: number, array: readonly Object[][]) => value is Object[]} predicate
- * @returns {Object[][]}
- */
-function _filterSheetContent(sheet, predicate) {
-
-  function filterFct(value, index, array) {
-    return index >= FIRST_CONTENT_INDEX &&
-      (!predicate || predicate(value, index, array));
-  }
-
-  const values = sheet.getDataRange().getValues();
-  return values.filter(filterFct);
-}
-
-/**
- * @param {string} str
- * @returns {number}
- */
-function _toNumber(str) {
-  return +str;
-}
-
-/**
  * @template T
  * @param {T[]} array
  * @returns {T[]}
  */
 function _filterNotNil(array) {
-  return array && array.filter((v) => v != null) 
+  return array && array.filter((v) => v != null)
+}
+
+class Repository {  
+  /**
+   * @param {SpreadsheetApp.Spreadsheet} ss
+   * @param {string} name
+   * @param {number} firstContentIndex
+   */
+  constructor(ss, name, firstContentIndex) {
+    this.ss = ss
+    this.name = name
+    this.firstContentIndex = firstContentIndex || 1
+  }
+
+  /**
+   * @returns {SpreadsheetApp.Sheet} sheet
+   */
+  getSheet() {
+    return this.ss.getSheetByName(this.name)
+  }
+
+  /**
+   * @param {(value: Object[], index: number, array: readonly Object[][]) => value is Object[]} predicate
+   * @returns {Object[][]}
+   */
+  findAll(predicate) {
+    const self = this
+
+    function filterFct(value, index, array) {
+      return index >= self.firstContentIndex &&
+        (!predicate || predicate(value, index, array));
+    }
+
+    const sheet = this.getSheet()
+    const values = sheet.getDataRange().getValues()
+    return values.filter(filterFct).map(this._fromRow);
+  }
+
+  /**
+   *
+   * @param {Object[]} row
+   * @returns {Object}
+   * @private
+   */
+  _fromRow(row) {
+    throw "You must implement this function"
+  }
 }

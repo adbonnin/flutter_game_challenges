@@ -1,36 +1,25 @@
-class GameRepository {
+class GameRepository extends Repository {
   constructor(ss) {
-    this.ss = ss;
+    super(ss, SHEETS.games._name);
   }
 
   /**
    * @param {string[]} titles
    * @returns {Object[]}
-   */ 
-  findByTitles(titles) {
-    const sheet = this.ss.getSheetByName(SHEETS.games._name);
-    const predicate = (value) => titles.includes(value[SHEETS.games.title]);
-
-    const values = _filterSheetContent(sheet, predicate);
-    return this._toGames(values);
-  }
-
-  /**
-   * @param {Object[][]} values
-   * @returns {Object[]}
    */
-  _toGames(values) {
-    return values.map(this._toGame);
+  findByTitles(titles) {
+    const predicate = (value) => titles.includes(value[SHEETS.games.title]);
+    return this.findAll(predicate);
   }
 
   /**
-   * @param {Object[]} value
+   * @param {Object[]} row
    * @returns {Object}
    */
-  _toGame(value) {
+  _fromRow(row) {
     return {
-      title: value[SHEETS.games.title],
-      igdbId: value[SHEETS.games.igdbId] || null,
+      title: String(row[SHEETS.games.title]),
+      igdbId: String(row[SHEETS.games.igdbId]) || null,
     }
   }
 }

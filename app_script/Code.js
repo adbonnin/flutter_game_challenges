@@ -26,8 +26,8 @@ const SHEETS = {
   },
 }
 
-const _DEBUG_CHALLENGE = null; // 'Manège arc en ciel';
-const _DEBUG_SEARCH = 'Mario Galaxy';
+const _DEBUG_CHALLENGE = 'Manège arc en ciel'
+const _DEBUG_SEARCH = 'Mario Galaxy'
 
 function showAddGameForm() {
   const form = HtmlService.createHtmlOutputFromFile('AddGameForm')
@@ -44,20 +44,20 @@ function doGet(request) {
   const parameter = request.parameter;
   const action = parameter.action;
 
-  if (action == 'getChallenges') {
+  if (action === 'getChallenges') {
     return doGetChallenges();
   }
 
-  if (action == 'getChallenge') {
+  if (action === 'getChallenge') {
     return doGetChallenge(parameter.title);
   }
 
-  if (action == 'getAchievementsByChallenge') {
+  if (action === 'getAchievementsByChallenge') {
     return doGetAchievementsByChallenge(parameter.challenge);
   }
 
-  if (action == 'searchIGDBGame') {
-    return doAuthenticateToTwitch(parameter.search, _toNumber(parameter.limit));
+  if (action === 'searchIGDBGame') {
+    return doAuthenticateToTwitch(parameter.search, Number(parameter.limit));
   }
 }
 
@@ -66,7 +66,7 @@ function doGetChallenges() {
   const repo = new ChallengeRepository(ss);
   const voBuilder = new ChallengeVoBuilder(ss);
 
-  const challenges = repo.getAll();
+  const challenges = repo.findAll();
   const vos = voBuilder.buildVos(challenges);
   return _createJsonOutput(vos);
 }
@@ -103,6 +103,7 @@ function doGetAchievementsByChallenge(challenge) {
 
 /**
  * @param {string} search
+ * @param {int} limit
  */
 function doSearchIGDBGame(search, limit) {
   const client = new IGDBClient()

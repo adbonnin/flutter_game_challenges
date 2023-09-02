@@ -1,16 +1,9 @@
-class ChallengeRepository {
-  constructor(ss) {
-    this.ss = ss;
-  }
-
+class ChallengeRepository extends Repository {
   /**
-   * @returns {Object[]}
+   * @param {SpreadsheetApp.Spreadsheet} ss
    */
-  getAll() {
-    const sheet = this.ss.getSheetByName(SHEETS.challenges._name);
-
-    const values = _filterSheetContent(sheet);
-    return this._toChallenges(values);
+  constructor(ss) {
+    super(ss, SHEETS.challenges._name);
   }
 
   /**
@@ -18,31 +11,20 @@ class ChallengeRepository {
    * @returns {Object[]}
    */
   findByTitle(title) {
-    const sheet = this.ss.getSheetByName(SHEETS.challenges._name);
     const predicate = (value) => value[SHEETS.challenges.title] === title;
-
-    const value = _first(_filterSheetContent(sheet, predicate));
-    return this._toChallenge(value);
+    return _first(this.findAll(predicate))
   }
 
   /**
-   * @param {Object[][]} values
-   * @returns {Object[]}
-   */
-  _toChallenges(values) {
-    return values.map(this._toChallenge);
-  }
-
-  /**
-   * @param {Object[][]} values
+   * @param {Object[]} value
    * @returns {Object}
    */
-  _toChallenge(value) {
+  _fromRow(value) {
     return {
-      title: value[SHEETS.challenges.title],
-      game: value[SHEETS.challenges.game],
-      creator: value[SHEETS.challenges.creator],
-      description: value[SHEETS.challenges.description],
+      title: String(value[SHEETS.challenges.title]),
+      game: String(value[SHEETS.challenges.game]),
+      creator: String(value[SHEETS.challenges.creator]) || null,
+      description: String(value[SHEETS.challenges.description]) || null,
     }
   }
 }
@@ -68,16 +50,17 @@ class ChallengeVoBuilder {
    * @returns {Object[]}
    */
   buildVos(challenges) {
-    const gamesRepo = new GameRepository(this.ss);
+    const gamesRepo = new GameRepository(this.ss)
 
-    const gameTitles = _uniqueValues(challenges, 'game');
-    const gamesByTitle = _keyBy(gamesRepo.findByTitles(gameTitles), 'title');
+    const gameTitles = _uniqueValues(challenges, 'game')
+    const games = gamesRepo.findByTitles(gameTitles)
+    const gamesByTitle = _keyBy(games, 'title')
 
     function toVo(challenge) {
       return {
         ...challenge,
-        game: gamesByTitle.get(challenge.game),
-      };
+        game: gamesByTitle.get(challenge.game) ?? {title: ''},
+      }
     }
 
     return challenges.map(toVo);
