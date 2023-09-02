@@ -19,7 +19,7 @@ class AchievementRepository extends Repository {
    * @param {Object[]} value
    * @returns {Object}
    */
-  _fromRow(value) {
+  fromRow(value) {
     return {
       challenge: String(value[SHEETS.achievements.challenge]),
       participant: String(value[SHEETS.achievements.participant]),

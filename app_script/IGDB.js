@@ -1,5 +1,4 @@
 class IGDBClient {
-
   /**
    * @param {string} search
    * @param {int} limit
@@ -68,20 +67,12 @@ class IGDBClient {
   }
 }
 
-class IGDBGameVoBuilder {
+class IGDBGameVoBuilder extends VoBuilder {
   /**
    * @param {IGDBClient} ss
    */
   constructor(client) {
     this.client = client;
-  }
-
-  /**
-   * @param {Object} game
-   * @returns {Object}
-   */
-  buildVo(game) {
-    return game && _first(this.buildVos([game]));
   }
 
   /**

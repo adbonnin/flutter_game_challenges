@@ -104,7 +104,7 @@ class Repository {
 
     const sheet = this.getSheet()
     const values = sheet.getDataRange().getValues()
-    return values.filter(filterFct).map(this._fromRow);
+    return values.filter(filterFct).map(this.fromRow);
   }
 
   /**
@@ -113,7 +113,25 @@ class Repository {
    * @returns {Object}
    * @private
    */
-  _fromRow(row) {
+  fromRow(row) {
+    throw "You must implement this function"
+  }
+}
+
+class VoBuilder {
+  /**
+   * @param {Object} values
+   * @returns {Object}
+   */
+  buildVo(value) {
+    return value && _first(this.buildVos([value]));
+  }
+
+  /**
+   * @param {Object[]} values
+   * @returns {Object[]}
+   */
+  buildVos(values) {
     throw "You must implement this function"
   }
 }

@@ -16,7 +16,7 @@ class GameRepository extends Repository {
    * @param {Object[]} row
    * @returns {Object}
    */
-  _fromRow(row) {
+  fromRow(row) {
     return {
       title: String(row[SHEETS.games.title]),
       igdbId: String(row[SHEETS.games.igdbId]) || null,

@@ -31,18 +31,20 @@ const _DEBUG_SEARCH = 'Mario Galaxy'
 
 function showAddGameForm() {
   const form = HtmlService.createHtmlOutputFromFile('AddGameForm')
-  SpreadsheetApp.getUi().showModalDialog(form, 'Ajouter un jeu')
+  SpreadsheetApp.getUi().showModalDialog(form, 'Ajouter des jeux')
 }
 
 function onOpen() {
   const menu = SpreadsheetApp.getUi().createMenu('Formulaires')
-  menu.addItem('Ajouter un jeu', 'showAddGameForm')
+  menu.addItem('Ajouter des jeux', 'showAddGameForm')
   menu.addToUi()
 }
 
 function doGet(request) {
   const parameter = request.parameter;
   const action = parameter.action;
+
+  Logger.log(request)
 
   if (action === 'getChallenges') {
     return doGetChallenges();

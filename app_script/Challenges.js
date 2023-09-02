@@ -19,7 +19,7 @@ class ChallengeRepository extends Repository {
    * @param {Object[]} value
    * @returns {Object}
    */
-  _fromRow(value) {
+  fromRow(value) {
     return {
       title: String(value[SHEETS.challenges.title]),
       game: String(value[SHEETS.challenges.game]),
@@ -29,20 +29,12 @@ class ChallengeRepository extends Repository {
   }
 }
 
-class ChallengeVoBuilder {
+class ChallengeVoBuilder extends VoBuilder {
   /**
    * @param {SpreadsheetApp.Spreadsheet} ss
    */
   constructor(ss) {
     this.ss = ss;
-  }
-
-  /**
-   * @param {Object} challenge
-   * @returns {Object}
-   */
-  buildVo(challenge) {
-    return challenge && _first(this.buildVos([challenge]));
   }
 
   /**
