@@ -72,7 +72,8 @@ class IGDBGameVoBuilder extends VoBuilder {
    * @param {IGDBClient} ss
    */
   constructor(client) {
-    this.client = client;
+    super()
+    this.client = client
   }
 
   /**

@@ -34,7 +34,8 @@ class ChallengeVoBuilder extends VoBuilder {
    * @param {SpreadsheetApp.Spreadsheet} ss
    */
   constructor(ss) {
-    this.ss = ss;
+    super()
+    this.ss = ss
   }
 
   /**

@@ -35,7 +35,7 @@ migrate_working_dir/
 *.env
 
 # Google Apps Script
-app_script/.clasp.json
+.clasp.json
 
 # Symbolication related
 app.*.symbols

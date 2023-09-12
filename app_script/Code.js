@@ -20,31 +20,26 @@ const SHEETS = {
     title: 0,
     igdbId: 1,
   },
-  participants: {
-    _name: 'Participants',
+  users: {
+    _name: 'Utilisateurs',
     name: 0,
+    username: 1,
+    hashedPassword: 2,
+    admin: 3,
+    authToken: 4,
   },
 }
 
-const _DEBUG_CHALLENGE = 'Manège arc en ciel'
-const _DEBUG_SEARCH = 'Mario Galaxy'
+const _TEST_CHALLENGE = 'Manège arc en ciel'
+const _TEST_SEARCH = 'Mario Galaxy'
 
-function showAddGameForm() {
-  const form = HtmlService.createHtmlOutputFromFile('AddGameForm')
-  SpreadsheetApp.getUi().showModalDialog(form, 'Ajouter des jeux')
-}
-
-function onOpen() {
-  const menu = SpreadsheetApp.getUi().createMenu('Formulaires')
-  menu.addItem('Ajouter des jeux', 'showAddGameForm')
-  menu.addToUi()
+function test() {
+  doSearchIGDBGame(_TEST_SEARCH)
 }
 
 function doGet(request) {
   const parameter = request.parameter;
   const action = parameter.action;
-
-  Logger.log(request)
 
   if (action === 'getChallenges') {
     return doGetChallenges();
@@ -59,7 +54,11 @@ function doGet(request) {
   }
 
   if (action === 'searchIGDBGame') {
-    return doAuthenticateToTwitch(parameter.search, Number(parameter.limit));
+    return doSearchIGDBGame(parameter.search, Number(parameter.limit));
+  }
+
+  if (action === 'addGame') {
+    return doAddGame(authToken, igdbId);
   }
 }
 
@@ -81,7 +80,7 @@ function doGetChallenge(title) {
   const repo = new ChallengeRepository(ss);
   const voBuilder = new ChallengeVoBuilder(ss);
 
-  const challenge = repo.findByTitle(title || _DEBUG_CHALLENGE);
+  const challenge = repo.findByTitle(title);
   const vo = voBuilder.buildVo(challenge);
   return _createJsonOutput(vo);
 }
@@ -98,7 +97,7 @@ function doGetAchievementsByChallenge(challenge) {
     return achievement;
   }
 
-  const achievements = repo.findByChallenge(challenge || _DEBUG_CHALLENGE);
+  const achievements = repo.findByChallenge(challenge);
   const vos = achievements.map(fixAchievement);
   return _createJsonOutput(vos);
 }
@@ -111,9 +110,29 @@ function doSearchIGDBGame(search, limit) {
   const client = new IGDBClient()
   const voBuilder = new IGDBGameVoBuilder(client)
 
-  const games = client.searchGames(search || _DEBUG_SEARCH, limit)
+  const games = client.searchGames(search, limit)
   const vos = voBuilder.buildVos(games)
   return _createJsonOutput(vos)
+}
+
+/**
+ * @param {string} authToken
+ * @param {string} igdbId
+ */
+function doAddGame(authToken, igdbId) {
+  const ss = SpreadsheetApp.getActive()
+  const userRepo = new UserRepository(ss)
+
+  const repo = new GameRepository(ss)
+  const voBuilder = new GameVoBuilder(ss)
+
+  if (!userRepo.checkAuth(authToken)) {
+    return
+  }
+
+  const game = repo.addGameFromIgdbId(igdbId)
+  const vo = voBuilder.buildVo(game);
+  return _createJsonOutput(vo);
 }
 
 /**
