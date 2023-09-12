@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_challenges/src/features/game_challenges/domain/challenge.dart';
-import 'package:flutter_game_challenges/src/features/igdb/presentation/igdb_cover_image.dart';
 
 class ChallengeCard extends StatelessWidget {
   const ChallengeCard(
@@ -28,9 +27,6 @@ class ChallengeCard extends StatelessWidget {
           height: 265,
           child: Stack(
             children: [
-              IgdbCoverImage(
-                gameId: challenge.game.igdbId,
-              ),
               Positioned(
                 left: 0,
                 right: 0,

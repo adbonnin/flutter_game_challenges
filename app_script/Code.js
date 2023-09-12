@@ -38,101 +38,60 @@ function test() {
 }
 
 function doGet(request) {
-  const parameter = request.parameter;
-  const action = parameter.action;
+  const parameter = request.parameter
+  const action = parameter.action
 
   if (action === 'getChallenges') {
-    return doGetChallenges();
+    return doGetChallenges()
   }
 
   if (action === 'getChallenge') {
-    return doGetChallenge(parameter.title);
+    return doGetChallenge(parameter.title)
   }
 
   if (action === 'getAchievementsByChallenge') {
-    return doGetAchievementsByChallenge(parameter.challenge);
-  }
-
-  if (action === 'searchIGDBGame') {
-    return doSearchIGDBGame(parameter.search, Number(parameter.limit));
-  }
-
-  if (action === 'addGame') {
-    return doAddGame(authToken, igdbId);
+    return doGetAchievementsByChallenge(parameter.challenge)
   }
 }
 
 function doGetChallenges() {
-  const ss = SpreadsheetApp.getActive();
-  const repo = new ChallengeRepository(ss);
-  const voBuilder = new ChallengeVoBuilder(ss);
+  const ss = SpreadsheetApp.getActive()
+  const repo = new ChallengeRepository(ss)
+  const voBuilder = new ChallengeVoBuilder(ss)
 
-  const challenges = repo.findAll();
-  const vos = voBuilder.buildVos(challenges);
-  return _createJsonOutput(vos);
+  const challenges = repo.findAll()
+  const vos = voBuilder.buildVos(challenges)
+  return _createJsonOutput(vos)
 }
 
 /**
  * @param {string} title
  */
 function doGetChallenge(title) {
-  const ss = SpreadsheetApp.getActive();
-  const repo = new ChallengeRepository(ss);
-  const voBuilder = new ChallengeVoBuilder(ss);
+  const ss = SpreadsheetApp.getActive()
+  const repo = new ChallengeRepository(ss)
+  const voBuilder = new ChallengeVoBuilder(ss)
 
-  const challenge = repo.findByTitle(title);
-  const vo = voBuilder.buildVo(challenge);
-  return _createJsonOutput(vo);
+  const challenge = repo.findByTitle(title)
+  const vo = voBuilder.buildVo(challenge)
+  return _createJsonOutput(vo)
 }
 
 /**
  * @param {string} challenge
  */
 function doGetAchievementsByChallenge(challenge) {
-  const ss = SpreadsheetApp.getActive();
-  const repo = new AchievementRepository(ss);
+  const ss = SpreadsheetApp.getActive()
+  const repo = new AchievementRepository(ss)
 
   function fixAchievement(achievement) {
-    delete achievement.challenge;
-    return achievement;
+    delete achievement.challenge
+    return achievement
   }
 
-  const achievements = repo.findByChallenge(challenge);
-  const vos = achievements.map(fixAchievement);
-  return _createJsonOutput(vos);
-}
-
-/**
- * @param {string} search
- * @param {int} limit
- */
-function doSearchIGDBGame(search, limit) {
-  const client = new IGDBClient()
-  const voBuilder = new IGDBGameVoBuilder(client)
-
-  const games = client.searchGames(search, limit)
-  const vos = voBuilder.buildVos(games)
+  const achievements = repo.findByChallenge(challenge)
+  const vos = achievements.map(fixAchievement)
   return _createJsonOutput(vos)
-}
-
-/**
- * @param {string} authToken
- * @param {string} igdbId
- */
-function doAddGame(authToken, igdbId) {
-  const ss = SpreadsheetApp.getActive()
-  const userRepo = new UserRepository(ss)
-
-  const repo = new GameRepository(ss)
-  const voBuilder = new GameVoBuilder(ss)
-
-  if (!userRepo.checkAuth(authToken)) {
-    return
-  }
-
-  const game = repo.addGameFromIgdbId(igdbId)
-  const vo = voBuilder.buildVo(game);
-  return _createJsonOutput(vo);
 }
 
 /**

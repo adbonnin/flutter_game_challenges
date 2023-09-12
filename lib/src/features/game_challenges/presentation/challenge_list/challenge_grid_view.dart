@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_game_challenges/src/features/game_challenges/domain/challenge.dart';
-import 'package:flutter_game_challenges/src/features/game_challenges/presentation/challenges/challenge_card.dart';
+import 'package:flutter_game_challenges/src/features/game_challenges/presentation/challenge_list/challenge_card.dart';
 
 class ChallengesGridView extends StatelessWidget {
   const ChallengesGridView(

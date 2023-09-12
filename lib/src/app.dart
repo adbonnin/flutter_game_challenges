@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_challenges/src/features/game_challenges/presentation/challenges/challenges_screen.dart';
+import 'package:flutter_game_challenges/src/features/game_challenges/presentation/challenge_list/challenge_list_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final configProvider = Provider<Config>((_) => //

@@ -4,7 +4,7 @@
  * @returns {T | null}
  */
 function _first(array) {
-  return (array && array.length) ? array[0] : undefined;
+  return (array && array.length) ? array[0] : undefined
 }
 
 /**
@@ -14,7 +14,7 @@ function _first(array) {
  * @returns {Map<Object, T>}
  */
 function _keyBy(array, keyProperty) {
-  return new Map(array.map((object) => [object[keyProperty], object]));
+  return new Map(array.map((object) => [object[keyProperty], object]))
 }
 
 /**
@@ -26,16 +26,16 @@ function _keyBy(array, keyProperty) {
 function _groupBy(array, keyProperty) {
 
   function reduceFct(previousValue, currentValue) {
-    const key = currentValue[keyProperty];
+    const key = currentValue[keyProperty]
 
-    const previousValues = previousValue.get(key) || [];
-    const newValues = [...previousValues, currentValue];
+    const previousValues = previousValue.get(key) || []
+    const newValues = [...previousValues, currentValue]
 
-    previousValue.set(key, newValues);
-    return previousValue;
+    previousValue.set(key, newValues)
+    return previousValue
   }
 
-  return array.reduce(reduceFct, new Map());
+  return array.reduce(reduceFct, new Map())
 }
 
 /**
@@ -99,12 +99,12 @@ class Repository {
 
     function filterFct(value, index, array) {
       return index >= self.firstContentIndex &&
-        (!predicate || predicate(value, index, array));
+        (!predicate || predicate(value, index, array))
     }
 
     const sheet = this.getSheet()
     const values = sheet.getDataRange().getValues()
-    return values.filter(filterFct).map(this.fromRow);
+    return values.filter(filterFct).map(this.fromRow)
   }
 
   /**
@@ -124,7 +124,7 @@ class VoBuilder {
    * @returns {Object}
    */
   buildVo(value) {
-    return value && _first(this.buildVos([value]));
+    return value && _first(this.buildVos([value]))
   }
 
   /**

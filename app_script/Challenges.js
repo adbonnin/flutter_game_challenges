@@ -3,7 +3,7 @@ class ChallengeRepository extends Repository {
    * @param {SpreadsheetApp.Spreadsheet} ss
    */
   constructor(ss) {
-    super(ss, SHEETS.challenges._name);
+    super(ss, SHEETS.challenges._name)
   }
 
   /**
@@ -11,7 +11,7 @@ class ChallengeRepository extends Repository {
    * @returns {Object[]}
    */
   findByTitle(title) {
-    const predicate = (value) => value[SHEETS.challenges.title] === title;
+    const predicate = (value) => value[SHEETS.challenges.title] === title
     return _first(this.findAll(predicate))
   }
 

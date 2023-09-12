@@ -3,7 +3,7 @@ class AchievementRepository extends Repository {
    * @param {SpreadsheetApp.Spreadsheet} ss
    */
   constructor(ss) {
-    super(ss, SHEETS.achievements._name);
+    super(ss, SHEETS.achievements._name)
   }
 
   /**
@@ -11,8 +11,8 @@ class AchievementRepository extends Repository {
    * @returns {Object[]}
    */
   findByChallenge(challenge) {
-    const predicate = (value) => value[SHEETS.achievements.challenge] === challenge;
-    return this.findAll(predicate);
+    const predicate = (value) => value[SHEETS.achievements.challenge] === challenge
+    return this.findAll(predicate)
   }
 
   /**

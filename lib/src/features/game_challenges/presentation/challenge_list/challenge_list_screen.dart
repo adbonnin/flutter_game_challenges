@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_challenges/src/features/game_challenges/application/game_challenges_providers.dart';
+import 'package:flutter_game_challenges/src/features/game_challenges/application/challenge_providers.dart';
 import 'package:flutter_game_challenges/src/features/game_challenges/domain/challenge.dart';
-import 'package:flutter_game_challenges/src/features/game_challenges/presentation/challenges/challenges_grid_view.dart';
+import 'package:flutter_game_challenges/src/features/game_challenges/presentation/challenge_list/challenge_grid_view.dart';
 import 'package:flutter_game_challenges/src/widgets/async_value_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

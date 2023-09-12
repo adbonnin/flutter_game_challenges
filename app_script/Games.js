@@ -1,6 +1,6 @@
 class GameRepository extends Repository {
   constructor(ss) {
-    super(ss, SHEETS.games._name);
+    super(ss, SHEETS.games._name)
   }
 
   /**
@@ -8,8 +8,8 @@ class GameRepository extends Repository {
    * @returns {Object[]}
    */
   findByTitles(titles) {
-    const predicate = (value) => titles.includes(value[SHEETS.games.title]);
-    return this.findAll(predicate);
+    const predicate = (value) => titles.includes(value[SHEETS.games.title])
+    return this.findAll(predicate)
   }
 
   /**
@@ -19,7 +19,6 @@ class GameRepository extends Repository {
   fromRow(row) {
     return {
       title: String(row[SHEETS.games.title]),
-      igdbId: String(row[SHEETS.games.igdbId]) || null,
     }
   }
 }
