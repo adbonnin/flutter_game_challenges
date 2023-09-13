@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_game_challenges/src/l10n/app_localizations_context.dart';
 import 'package:flutter_game_challenges/src/router/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'app.g.dart';
 
@@ -31,12 +33,14 @@ class MyApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: 'Defis Jeux Vidéo',
+      onGenerateTitle: (context) => context.loc.app_title,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
         useMaterial3: true,
       ),
       routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }
