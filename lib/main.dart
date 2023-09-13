@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_game_challenges/src/app.dart';
 
 void main() {
@@ -7,5 +6,5 @@ void main() {
     appDeploymentId: String.fromEnvironment('APP_DEPLOYMENT_ID'),
   );
 
-  runApp(const MyApp(config));
+  launchApp(config);
 }

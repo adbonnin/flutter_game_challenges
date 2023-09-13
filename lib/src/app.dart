@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_game_challenges/src/features/game_challenges/presentation/challenge_list/challenge_list_screen.dart';
+import 'package:flutter_game_challenges/src/router/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final configProvider = Provider<Config>((_) => //
-    throw UnimplementedError("Environment provider must be overridden"));
+part 'app.g.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp(
-    this.config, {
-    super.key,
-  });
+@Riverpod(keepAlive: true)
+Config config(ConfigRef ref) {
+  throw UnimplementedError("Environment provider must be overridden");
+}
 
-  final Config config;
+void launchApp(Config config) {
+  final overrides = [
+    configProvider.overrideWithValue(config),
+  ];
+
+  runApp(
+    ProviderScope(
+      overrides: overrides,
+      child: const MyApp(),
+    ),
+  );
+}
+
+class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
-      overrides: [
-        configProvider.overrideWithValue(config),
-      ],
-      child: MaterialApp(
-        title: 'Defis Jeux Vidéo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-          useMaterial3: true,
-        ),
-        home: const ChallengesScreen(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
+      title: 'Defis Jeux Vidéo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        useMaterial3: true,
       ),
+      routerConfig: router,
     );
   }
 }

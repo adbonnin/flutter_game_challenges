@@ -8,5 +8,10 @@ targets:
           explicit_to_json: true
       riverpod_generator:
         generate_for:
+          - lib/**/app.dart
           - lib/**/application/*.dart
           - lib/**/data/*.dart
+          - lib/**/router.dart
+      go_router_builder:
+        generate_for:
+          - lib/**/router.dart
