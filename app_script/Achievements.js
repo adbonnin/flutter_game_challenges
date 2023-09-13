@@ -23,7 +23,7 @@ class AchievementRepository extends Repository {
     return {
       challenge: String(value[SHEETS.achievements.challenge]),
       participant: String(value[SHEETS.achievements.participant]),
-      date: Date(value[SHEETS.achievements.date]) || null,
+      date: this.toDateOrNull(value[SHEETS.achievements.date]),
     }
   }
 }

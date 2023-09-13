@@ -95,16 +95,14 @@ class Repository {
    * @returns {Object[][]}
    */
   findAll(predicate) {
-    const self = this
-
     function filterFct(value, index, array) {
-      return index >= self.firstContentIndex &&
+      return index >= this.firstContentIndex &&
         (!predicate || predicate(value, index, array))
     }
 
     const sheet = this.getSheet()
     const values = sheet.getDataRange().getValues()
-    return values.filter(filterFct).map(this.fromRow)
+    return values.filter(filterFct, this).map(this.fromRow, this)
   }
 
   /**
@@ -115,6 +113,28 @@ class Repository {
    */
   fromRow(row) {
     throw "You must implement this function"
+  }
+
+  /**
+   * @param {Object} value
+   * @returns {Date}
+   */
+  toDateOrNull(value) {
+    const type = typeof value
+
+    if (value == null) {
+      return null
+    }
+
+    if (value.toJSON) {
+      return value
+    }
+
+    if (type == "string" || type == "number") {
+      return Date(value)
+    }
+
+    return null
   }
 }
 
